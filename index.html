@@ -3,465 +3,336 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Folio &amp; Co.</title>
+<title>Kern &amp; Code</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Folio & Co. is a house of marketing and technology: websites, ERP-style business systems and marketing, made to one standard.">
+<meta name="description" content="Kern & Code builds websites, ERP-style business systems and marketing that work together.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  /* Layout: a book lying open on a black desk. Each scroll step turns one leaf. */
+  /* Layout: white page, black type, one inverted band in the middle. Wide margins, a 12-column grid, very little else. */
   :root {
-    --desk: #0c0c0c;
-    --paper: #efede8;
-    --paper-edge: #d9d6cf;
-    --ink: #151515;
-    --ink-soft: #55534f;
-    --rule: #a9a6a0;
-    --display: 'IM Fell English', 'EB Garamond', Georgia, serif;
-    --caps: 'IM Fell English SC', 'EB Garamond', Georgia, serif;
-    --body: 'EB Garamond', Garamond, Georgia, serif;
-    --pw: min(46vw, 60vh, 540px);
-    --ph: calc(var(--pw) / 0.72);
-    color-scheme: dark;
+    --white: #ffffff;
+    --black: #0a0a0a;
+    --grey: #6b6b6b;
+    --line: #e4e4e4;
+    --line-dark: #2a2a2a;
+    --sans: 'Geist', 'Helvetica Neue', Arial, sans-serif;
+    --serif: 'Instrument Serif', 'Times New Roman', serif;
+    --mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+    --max: 1280px;
+    color-scheme: light;
   }
-  @media (max-width: 819px) {
-    :root {
-      --pw: min(calc(100vw - 32px), 440px);
-      --ph: min(calc(100svh - 132px), calc(var(--pw) * 1.62));
-    }
-  }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-snap-type: y mandatory; background: var(--desk); }
+  html { scroll-behavior: smooth; }
   body {
-    background: var(--desk);
-    color: var(--ink);
-    font-family: var(--body);
-    overflow-x: hidden;
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
-    -webkit-font-smoothing: antialiased;
+    background: var(--white); color: var(--black);
+    font-family: var(--sans); font-weight: 400; font-size: 17px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
-  a { color: inherit; }
-  :focus-visible { outline: 1px dashed currentColor; outline-offset: 3px; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--white); }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 1.5px solid currentColor; outline-offset: 4px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
 
-  /* Scroll track: one snap stop per leaf */
-  .snap { height: 100vh; scroll-snap-align: start; }
-
-  /* Fixed chrome */
-  .chrome {
-    position: fixed; left: 0; right: 0; z-index: 400;
-    display: flex; justify-content: space-between; align-items: center;
+  .wrap {
+    max-width: var(--max); margin-inline: auto;
     padding-left: max(24px, env(safe-area-inset-left, 0px));
     padding-right: max(24px, env(safe-area-inset-right, 0px));
-    color: #bdbab3; font-family: var(--caps); letter-spacing: .14em; font-size: 13px;
-    pointer-events: none;
   }
-  .chrome a, .chrome button { pointer-events: auto; }
-  .chrome.top { top: 0; padding-top: calc(18px + env(safe-area-inset-top, 0px)); }
-  .chrome.bottom { bottom: 0; padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
-  .mark { text-decoration: none; color: #f2f0eb; font-size: 15px; }
-  .cta-link {
-    text-decoration: none; border-bottom: 1px solid #6d6a65; padding-bottom: 2px;
-    transition: color .3s, border-color .3s;
-  }
-  .cta-link:hover { color: #fff; border-color: #fff; }
-  .hint { transition: opacity .6s; }
-  .folio-count { font-variant-numeric: tabular-nums; }
+  .label { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--grey); }
+  .serif { font-family: var(--serif); font-weight: 400; font-style: italic; letter-spacing: 0; }
+  h1, h2, h3 { font-weight: 500; letter-spacing: -.035em; line-height: 1; text-wrap: balance; }
 
-  /* The book */
-  .stage { position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 10; }
-  .book {
-    position: relative; width: calc(var(--pw) * 2); height: var(--ph);
-    perspective: 2600px; pointer-events: auto;
-    transform: translateX(var(--shift, 0px));
-    will-change: transform;
+  /* Nav */
+  nav {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+    background: rgba(255,255,255,.86); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent; transition: border-color .3s;
   }
-  .under {
-    position: absolute; top: 0; width: var(--pw); height: 100%;
-    background: var(--paper-edge);
+  nav.scrolled { border-color: var(--line); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 24px; }
+  .logo { font-weight: 600; letter-spacing: -.02em; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+  .logo i { width: 10px; height: 10px; background: var(--black); display: inline-block; border-radius: 50%; }
+  .links { display: flex; gap: 32px; font-size: 15px; }
+  .links a { color: var(--grey); transition: color .2s; }
+  .links a:hover { color: var(--black); }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--black); color: var(--white); border: 1px solid var(--black);
+    padding: 10px 20px; border-radius: 999px; font-size: 15px; font-weight: 500;
+    transition: background .25s, color .25s;
+    cursor: pointer; font-family: inherit;
   }
-  .under.r { left: 50%; box-shadow: 2px 1px 0 -1px #c9c5bd, 4px 2px 0 -1px #b7b3ab, 6px 3px 0 -1px #9e9a93, 0 30px 60px rgba(0,0,0,.6); }
-  .under.l { left: 0; opacity: 0; box-shadow: -2px 1px 0 -1px #c9c5bd, -4px 2px 0 -1px #b7b3ab, -6px 3px 0 -1px #9e9a93, 0 30px 60px rgba(0,0,0,.6); }
+  .pill:hover { background: var(--white); color: var(--black); }
+  .pill .arr { transition: transform .25s; }
+  .pill:hover .arr { transform: translateX(3px); }
 
-  .leaf {
-    position: absolute; top: 0; left: 50%; width: var(--pw); height: 100%;
-    transform-origin: left center; transform-style: preserve-3d;
-    will-change: transform;
+  /* Hero */
+  .hero { padding-block: clamp(72px, 13vw, 168px) clamp(56px, 8vw, 104px); }
+  .hero h1 { font-size: clamp(48px, 9.4vw, 136px); max-width: 12ch; }
+  .hero h1 .serif { font-size: 1.04em; }
+  .hero .line { display: block; overflow: hidden; }
+  .hero .line > span { display: inline-block; animation: rise 1s cubic-bezier(.2,.7,.1,1) both; }
+  .hero .line:nth-child(2) > span { animation-delay: .08s; }
+  .hero .line:nth-child(3) > span { animation-delay: .16s; }
+  @keyframes rise { from { transform: translateY(40%); opacity: .0; } to { transform: none; opacity: 1; } }
+  .hero-foot {
+    margin-top: clamp(40px, 6vw, 80px);
+    display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; align-items: end;
   }
-  .face {
-    position: absolute; inset: 0; overflow: hidden;
-    backface-visibility: hidden; -webkit-backface-visibility: hidden;
-    background-color: var(--paper);
-    background-image:
-      radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(60,55,50,.10) 100%),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
-    container-type: size;
-    display: flex; flex-direction: column;
-    padding: 7.5cqw 9cqw 5.5cqw 10cqw;
-  }
-  .front { box-shadow: inset 18px 0 24px -16px rgba(0,0,0,.35); }
-  .back  { transform: rotateY(180deg); padding: 7.5cqw 10cqw 5.5cqw 9cqw; box-shadow: inset -18px 0 24px -16px rgba(0,0,0,.35); }
-  .face::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(90deg, rgba(0,0,0,.28), rgba(0,0,0,0) 60%);
-    opacity: var(--shade, 0);
-  }
-  .back::after { background: linear-gradient(270deg, rgba(0,0,0,.28), rgba(0,0,0,0) 60%); }
+  .hero-foot p { grid-column: 1 / span 5; font-size: 19px; color: var(--grey); max-width: 42ch; }
+  .hero-foot .actions { grid-column: 9 / -1; display: flex; gap: 20px; justify-content: flex-end; align-items: center; flex-wrap: wrap; }
+  .ghost { font-size: 15px; border-bottom: 1px solid var(--black); padding-bottom: 2px; }
 
-  /* Page typography */
-  .face { font-size: clamp(14px, 3.15cqw, 17.5px); line-height: 1.5; }
-  .head {
-    display: flex; justify-content: space-between; gap: 1em;
-    font-family: var(--caps); font-size: .78em; letter-spacing: .16em; color: var(--ink-soft);
-    padding-bottom: .6em; border-bottom: 1px solid var(--rule);
-  }
-  .content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.1em; min-height: 0; }
-  .folio { text-align: center; font-family: var(--display); font-style: italic; color: var(--ink-soft); font-size: .9em; }
-  .kicker { font-family: var(--caps); letter-spacing: .2em; font-size: .8em; color: var(--ink-soft); }
-  h1, h2, h3 { font-family: var(--display); font-weight: 400; text-wrap: balance; line-height: 1.05; }
-  h2 { font-size: 2.15em; }
-  p { text-wrap: pretty; }
-  .drop::first-letter {
-    font-family: var(--display); float: left; font-size: 3.6em; line-height: .82;
-    padding: .06em .1em 0 0;
-  }
-  .list { list-style: none; display: grid; gap: .1em; border-top: 1px solid var(--rule); }
-  .list li { display: flex; align-items: baseline; gap: .7em; padding: .38em 0; border-bottom: 1px solid var(--rule); }
-  .list li span:first-child { font-family: var(--caps); font-size: .78em; letter-spacing: .1em; color: var(--ink-soft); min-width: 1.6em; }
-  .note { font-style: italic; color: var(--ink-soft); font-size: .88em; }
+  /* Ticker */
+  .ticker { border-block: 1px solid var(--line); overflow: hidden; padding-block: 22px; }
+  .ticker-track { display: flex; width: max-content; animation: slide 38s linear infinite; }
+  .ticker span { font-size: clamp(20px, 2.4vw, 30px); letter-spacing: -.02em; padding-right: 48px; white-space: nowrap; display: inline-flex; align-items: center; gap: 48px; }
+  .ticker span::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--black); }
+  @keyframes slide { to { transform: translateX(-50%); } }
 
-  /* Title page */
-  .title-page { text-align: center; align-items: center; }
-  .title-page h1 { font-size: 3.6em; letter-spacing: -.01em; }
-  .title-page .sub { font-family: var(--display); font-style: italic; font-size: 1.3em; }
-  .title-page .trio { font-family: var(--caps); letter-spacing: .22em; font-size: .78em; color: var(--ink-soft); }
-  .orn { width: 46%; height: auto; color: var(--ink); display: block; margin-inline: auto; }
-  .imprint { text-align: center; font-family: var(--caps); letter-spacing: .2em; font-size: .75em; color: var(--ink-soft); display: grid; gap: .3em; }
+  /* Section heads */
+  .block { padding-block: clamp(80px, 11vw, 150px); }
+  .sec-head { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; margin-bottom: clamp(48px, 6vw, 80px); }
+  .sec-head .label { grid-column: 1 / span 3; padding-top: 10px; }
+  .sec-head h2 { grid-column: 4 / -1; font-size: clamp(36px, 5.2vw, 72px); max-width: 16ch; }
 
-  /* Contents */
-  .toc { list-style: none; display: grid; gap: .5em; }
-  .toc a { display: flex; align-items: baseline; gap: .5em; text-decoration: none; }
-  .toc a:hover .t { font-style: italic; }
-  .toc .n { font-family: var(--caps); width: 2.2em; color: var(--ink-soft); font-size: .85em; }
-  .toc .dots { flex: 1; border-bottom: 1px dotted var(--ink-soft); transform: translateY(-.3em); }
-  .toc .p { font-variant-numeric: oldstyle-nums tabular-nums; }
+  /* Services */
+  .services { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--black); }
+  .svc { padding: 32px 32px 40px 0; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  .svc + .svc { padding-left: 32px; border-left: 1px solid var(--line); }
+  .svc .tag { display: flex; justify-content: space-between; }
+  .svc h3 { font-size: clamp(28px, 2.8vw, 38px); }
+  .svc p { color: var(--grey); max-width: 34ch; }
+  .svc ul { list-style: none; border-top: 1px solid var(--line); margin-top: auto; }
+  .svc li { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px; display: flex; justify-content: space-between; gap: 12px; }
+  .svc li::after { content: "↗"; color: var(--line); transition: color .2s; }
+  .svc li:hover::after { color: var(--black); }
 
-  /* Chapter openers (left-hand pages) */
-  .opener { text-align: center; align-items: center; }
-  .numeral { font-family: var(--display); font-size: 7.5em; line-height: .9; }
-  .opener h3 { font-size: 1.9em; }
-  .opener .sub { font-style: italic; color: var(--ink-soft); max-width: 22ch; }
-  .epigraph { font-family: var(--display); font-style: italic; font-size: 1.35em; line-height: 1.4; text-align: center; max-width: 24ch; margin-inline: auto; }
-  .attrib { font-family: var(--caps); letter-spacing: .18em; font-size: .75em; color: var(--ink-soft); text-align: center; }
-  .blank { font-family: var(--caps); letter-spacing: .2em; font-size: .75em; color: var(--ink-soft); text-align: center; }
+  /* Inverted band: how it connects */
+  .band { background: var(--black); color: var(--white); }
+  .band .label { color: #8d8d8d; }
+  .band .sec-head h2 { max-width: 18ch; }
+  .flow { display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid var(--line-dark); }
+  .flow div { padding: 24px 20px 28px 0; display: grid; gap: 14px; position: relative; min-width: 0; }
+  .flow div + div { padding-left: 20px; border-left: 1px solid var(--line-dark); }
+  .flow b { font-weight: 500; font-size: 20px; letter-spacing: -.02em; }
+  .flow small { color: #8d8d8d; font-size: 14px; line-height: 1.45; }
+  .flow .who { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--white); border: 1px solid #3a3a3a; padding: 3px 8px; border-radius: 999px; justify-self: start; }
+  .band-foot { margin-top: clamp(48px, 6vw, 80px); display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: end; }
+  .band-foot p { font-size: clamp(22px, 2.6vw, 32px); letter-spacing: -.02em; max-width: 26ch; line-height: 1.2; }
 
-  /* Method */
-  .steps { list-style: none; display: grid; gap: .9em; }
-  .steps li { display: grid; grid-template-columns: 2.4em 1fr; gap: .2em .6em; }
-  .steps .r { font-family: var(--display); font-size: 1.25em; line-height: 1.2; }
-  .steps b { font-family: var(--display); font-weight: 400; font-size: 1.2em; display: block; line-height: 1.2; }
-  .steps p { color: var(--ink-soft); grid-column: 2; font-size: .95em; }
+  /* Process */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .step { border-top: 1px solid var(--black); padding-top: 20px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+  .step .n { font-family: var(--mono); font-size: 13px; }
+  .step h3 { font-size: 26px; letter-spacing: -.025em; }
+  .step p { color: var(--grey); font-size: 16px; }
+
+  /* Principles */
+  .principles { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+  .principles .label { grid-column: 1 / span 3; padding-top: 10px; }
+  .principles ul { grid-column: 4 / -1; list-style: none; }
+  .principles li { display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px; padding: 28px 0; border-top: 1px solid var(--line); }
+  .principles li:last-child { border-bottom: 1px solid var(--line); }
+  .principles b { font-weight: 500; font-size: 22px; letter-spacing: -.02em; }
+  .principles span { color: var(--grey); }
 
   /* Contact */
-  .mail { display: flex; flex-wrap: wrap; align-items: center; gap: .6em 1em; }
-  .mail .addr { font-family: var(--display); font-size: 1.45em; user-select: all; word-break: break-all; }
-  .btn {
-    font: inherit; font-family: var(--caps); letter-spacing: .15em; font-size: .78em;
-    background: var(--ink); color: var(--paper); border: 1px solid var(--ink);
-    padding: .55em 1.1em; cursor: pointer; transition: background .25s, color .25s;
-  }
-  .btn:hover { background: transparent; color: var(--ink); }
-  .tags { display: flex; flex-wrap: wrap; gap: .45em; }
-  .tags span { border: 1px solid var(--ink); padding: .2em .7em; font-size: .85em; font-style: italic; }
-  .colophon { font-size: .8em; color: var(--ink-soft); text-align: center; border-top: 1px solid var(--rule); padding-top: .8em; }
+  .contact { padding-block: clamp(96px, 13vw, 180px) clamp(64px, 8vw, 100px); }
+  .contact h2 { font-size: clamp(52px, 10vw, 150px); }
+  .contact-row { margin-top: clamp(40px, 5vw, 64px); display: flex; flex-wrap: wrap; gap: 20px 32px; align-items: center; justify-content: space-between; border-top: 1px solid var(--black); padding-top: 28px; }
+  .email { font-size: clamp(22px, 3vw, 36px); letter-spacing: -.02em; user-select: all; overflow-wrap: anywhere; min-width: 0; }
+  .contact-row .group { display: flex; gap: 14px; flex-wrap: wrap; }
+  .outline { background: transparent; color: var(--black); }
+  .outline:hover { background: var(--black); color: var(--white); }
 
-  /* Phone: one page at a time, spine on the left, back pages not shown */
-  @media (max-width: 819px) {
-    .book { width: var(--pw); }
-    .leaf, .under.r { left: 0; }
-    .under.l, .back { display: none; }
-    .title-page h1 { font-size: 3.1em; }
-    .chrome { font-size: 12px; }
-    .chrome .hint-wide { display: none; }
+  footer { border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); font-size: 14px; color: var(--grey); }
+
+  /* Narrow screens */
+  @media (max-width: 900px) {
+    .links { display: none; }
+    .hero-foot p { grid-column: 1 / -1; }
+    .hero-foot .actions { grid-column: 1 / -1; justify-content: flex-start; }
+    .sec-head .label, .sec-head h2, .principles .label, .principles ul { grid-column: 1 / -1; }
+    .services { grid-template-columns: 1fr; }
+    .svc, .svc + .svc { padding: 32px 0 40px; border-left: 0; }
+    .svc + .svc { border-top: 1px solid var(--line); }
+    .flow { grid-template-columns: repeat(2, 1fr); }
+    .flow div:nth-child(odd) { padding-left: 0; border-left: 0; }
+    .flow div:nth-child(n+3) { border-top: 1px solid var(--line-dark); }
+    .steps { grid-template-columns: repeat(2, 1fr); row-gap: 40px; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-snap-type: y proximity; }
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    .wrap { padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+    nav .pill { padding: 8px 16px; font-size: 14px; }
+    .steps { grid-template-columns: 1fr; }
+    .principles li { grid-template-columns: 1fr; gap: 6px; }
+    .flow { grid-template-columns: 1fr; }
+    .flow div, .flow div + div { padding-left: 0; border-left: 0; }
+    .flow div + div { border-top: 1px solid var(--line-dark); }
   }
 </style>
 </head>
 <body>
 
-<header class="chrome top">
-  <a class="mark" href="#p1" data-go="0">Folio &amp; Co.</a>
-  <a class="cta-link" href="#p7" data-go="6">Begin a project</a>
+<nav id="nav">
+  <div class="wrap">
+    <a class="logo" href="#top"><i></i>Kern &amp; Code</a>
+    <div class="links">
+      <a href="#services">Services</a>
+      <a href="#how">How it connects</a>
+      <a href="#process">Process</a>
+    </div>
+    <a class="pill" href="#contact">Start a project <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<header class="hero wrap" id="top">
+  <p class="label" style="margin-bottom:28px">Marketing &amp; technology studio</p>
+  <h1>
+    <span class="line"><span>Websites,</span></span>
+    <span class="line"><span>systems <span class="serif">&amp;</span></span></span>
+    <span class="line"><span>the story.</span></span>
+  </h1>
+  <div class="hero-foot">
+    <p>We design the website your customers see, build the system your team runs on, and run the marketing that brings people to both.</p>
+    <div class="actions">
+      <a class="ghost" href="#services">See what we do</a>
+      <a class="pill" href="#contact">Start a project <span class="arr">→</span></a>
+    </div>
+  </div>
 </header>
-<footer class="chrome bottom">
-  <span class="hint">Scroll to turn the page<span class="hint-wide"> &nbsp;·&nbsp; or use the arrow keys</span></span>
-  <span class="folio-count" aria-live="polite">p. i</span>
-</footer>
 
-<div class="stage">
-  <div class="book" id="book">
-    <div class="under l"></div>
-    <div class="under r"></div>
-
-    <!-- Leaf 1: title page -->
-    <section class="leaf" aria-label="Title page">
-      <div class="face front">
-        <div class="content title-page">
-          <span class="kicker">A house of</span>
-          <h1>Folio &amp; Co.</h1>
-          <svg class="orn" viewBox="0 0 200 16" aria-hidden="true"><path d="M0 8h84M116 8h84" stroke="currentColor" stroke-width=".8" fill="none"/><path d="M100 1l7 7-7 7-7-7z" fill="none" stroke="currentColor" stroke-width=".8"/><circle cx="100" cy="8" r="1.6" fill="currentColor"/><circle cx="88" cy="8" r="1" fill="currentColor"/><circle cx="112" cy="8" r="1" fill="currentColor"/></svg>
-          <p class="sub">Marketing &amp; Technology</p>
-          <p class="trio">Websites · Systems · Stories</p>
-        </div>
-        <div class="imprint"><span>Est. MMXXVI</span><span>Volume the First</span></div>
-      </div>
-      <div class="face back">
-        <div class="content">
-          <p class="epigraph">“A business is a story told every day. We see that it is told well, and that the machinery behind it never drops a line.”</p>
-          <p class="attrib">— The House Rules</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Leaf 2: contents -->
-    <section class="leaf" aria-label="Contents">
-      <div class="face front">
-        <div class="head"><span>Folio &amp; Co.</span><span>Contents</span></div>
-        <div class="content">
-          <h2>Contents</h2>
-          <p>We are a small house of designers, engineers and marketers. We build the website your customers see, the system your team works in, and the marketing that brings people to the door.</p>
-          <ol class="toc">
-            <li><a href="#p3" data-go="2"><span class="n">I.</span><span class="t">Of Websites</span><span class="dots"></span><span class="p">3</span></a></li>
-            <li><a href="#p4" data-go="3"><span class="n">II.</span><span class="t">Of Systems</span><span class="dots"></span><span class="p">4</span></a></li>
-            <li><a href="#p5" data-go="4"><span class="n">III.</span><span class="t">Of Marketing</span><span class="dots"></span><span class="p">5</span></a></li>
-            <li><a href="#p6" data-go="5"><span class="n">IV.</span><span class="t">Of Method</span><span class="dots"></span><span class="p">6</span></a></li>
-            <li><a href="#p7" data-go="6"><span class="n">§</span><span class="t">Correspondence</span><span class="dots"></span><span class="p">7</span></a></li>
-          </ol>
-        </div>
-        <div class="folio">ii</div>
-      </div>
-      <div class="face back">
-        <div class="content opener">
-          <span class="kicker">Chapter</span>
-          <div class="numeral">I</div>
-          <h3>Of Websites</h3>
-          <p class="sub">In which the front door is built.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Leaf 3: websites -->
-    <section class="leaf" aria-label="Chapter I, Of Websites">
-      <div class="face front">
-        <div class="head"><span>Chapter I</span><span>Of Websites</span></div>
-        <div class="content">
-          <h2>Of Websites</h2>
-          <p class="drop">Your website is the first page of your story most people will read. We design and build sites that load fast, read clearly and turn visitors into customers.</p>
-          <ul class="list">
-            <li><span>i</span>Brand &amp; company websites</li>
-            <li><span>ii</span>E-commerce storefronts</li>
-            <li><span>iii</span>Web applications &amp; customer portals</li>
-            <li><span>iv</span>Speed, SEO &amp; accessibility</li>
-          </ul>
-          <p class="note">* Every site ships with analytics in place from day one.</p>
-        </div>
-        <div class="folio">iii</div>
-      </div>
-      <div class="face back">
-        <div class="content opener">
-          <span class="kicker">Chapter</span>
-          <div class="numeral">II</div>
-          <h3>Of Systems</h3>
-          <p class="sub">In which the back office learns to run itself.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Leaf 4: systems / ERP -->
-    <section class="leaf" aria-label="Chapter II, Of Systems">
-      <div class="face front">
-        <div class="head"><span>Chapter II</span><span>Of Systems</span></div>
-        <div class="content">
-          <h2>Of Systems</h2>
-          <p class="drop">Behind every good business is a well-kept ledger. We build ERP-style systems around the way your team already works: one place for stock, orders, money and people.</p>
-          <ul class="list">
-            <li><span>i</span>Inventory, orders &amp; purchasing</li>
-            <li><span>ii</span>Finance, billing &amp; invoicing</li>
-            <li><span>iii</span>HR, payroll &amp; attendance</li>
-            <li><span>iv</span>CRM &amp; sales pipeline</li>
-            <li><span>v</span>Live dashboards &amp; reports</li>
-          </ul>
-          <p class="note">* Shaped to your workflow, not the other way round.</p>
-        </div>
-        <div class="folio">iv</div>
-      </div>
-      <div class="face back">
-        <div class="content opener">
-          <span class="kicker">Chapter</span>
-          <div class="numeral">III</div>
-          <h3>Of Marketing</h3>
-          <p class="sub">In which the right people hear of you.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Leaf 5: marketing -->
-    <section class="leaf" aria-label="Chapter III, Of Marketing">
-      <div class="face front">
-        <div class="head"><span>Chapter III</span><span>Of Marketing</span></div>
-        <div class="content">
-          <h2>Of Marketing</h2>
-          <p class="drop">Good work deserves an audience. Our marketing team plans the story, makes the work and measures what it earns, so every budget and every post has a reason.</p>
-          <ul class="list">
-            <li><span>i</span>Brand strategy &amp; identity</li>
-            <li><span>ii</span>Social media &amp; content</li>
-            <li><span>iii</span>Performance ads on search &amp; social</li>
-            <li><span>iv</span>Campaigns, email &amp; launches</li>
-            <li><span>v</span>Reporting tied to revenue</li>
-          </ul>
-        </div>
-        <div class="folio">v</div>
-      </div>
-      <div class="face back">
-        <div class="content opener">
-          <span class="kicker">Chapter</span>
-          <div class="numeral">IV</div>
-          <h3>Of Method</h3>
-          <p class="sub">In which we explain how the work gets done.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Leaf 6: method -->
-    <section class="leaf" aria-label="Chapter IV, Of Method">
-      <div class="face front">
-        <div class="head"><span>Chapter IV</span><span>Of Method</span></div>
-        <div class="content">
-          <h2>Of Method</h2>
-          <ol class="steps">
-            <li><span class="r">I.</span><div><b>Listen</b></div><p>We learn your business, your customers and your numbers.</p></li>
-            <li><span class="r">II.</span><div><b>Draft</b></div><p>Wireframes, system plans and a campaign outline you can hold.</p></li>
-            <li><span class="r">III.</span><div><b>Build</b></div><p>Design, code and content, shown to you every week.</p></li>
-            <li><span class="r">IV.</span><div><b>Tend</b></div><p>Launch, measure, improve. We stay on after the last page.</p></li>
-          </ol>
-        </div>
-        <div class="folio">vi</div>
-      </div>
-      <div class="face back">
-        <div class="content">
-          <p class="blank">This page intentionally left blank</p>
-          <p class="note" style="text-align:center">for your next chapter.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Leaf 7: contact -->
-    <section class="leaf" aria-label="Correspondence">
-      <div class="face front">
-        <div class="head"><span>Folio &amp; Co.</span><span>Correspondence</span></div>
-        <div class="content">
-          <h2>Begin your chapter.</h2>
-          <p>Tell us about your business, what is working and what is not. We reply within one working day.</p>
-          <div class="tags" aria-label="We can help with"><span>a website</span><span>a system</span><span>marketing</span><span>all three</span></div>
-          <div class="mail">
-            <span class="addr" id="addr">hello@folioandco.studio</span>
-            <button class="btn" id="copy" type="button">Copy address</button>
-          </div>
-        </div>
-        <p class="colophon">Set in IM Fell &amp; EB Garamond. Printed in black and white.<br>© MMXXVI Folio &amp; Co.</p>
-      </div>
-    </section>
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>Brand websites</span><span>E-commerce</span><span>Web apps</span><span>ERP systems</span><span>Inventory</span><span>Billing</span><span>HR &amp; payroll</span><span>CRM</span><span>Brand strategy</span><span>Social</span><span>Performance ads</span><span>Content</span>
+    <span>Brand websites</span><span>E-commerce</span><span>Web apps</span><span>ERP systems</span><span>Inventory</span><span>Billing</span><span>HR &amp; payroll</span><span>CRM</span><span>Brand strategy</span><span>Social</span><span>Performance ads</span><span>Content</span>
   </div>
 </div>
 
-<main aria-hidden="true">
-  <div class="snap" id="p1"></div><div class="snap" id="p2"></div><div class="snap" id="p3"></div>
-  <div class="snap" id="p4"></div><div class="snap" id="p5"></div><div class="snap" id="p6"></div>
-  <div class="snap" id="p7"></div>
-</main>
+<section class="block wrap" id="services">
+  <div class="sec-head">
+    <p class="label">Services</p>
+    <h2>Three practices. <span class="serif">One team.</span></h2>
+  </div>
+  <div class="services">
+    <article class="svc">
+      <div class="tag"><span class="label">Front of house</span></div>
+      <h3>Websites</h3>
+      <p>Fast, clear websites that turn visitors into customers. Designed in-house, built to last, easy for your team to update.</p>
+      <ul>
+        <li>Brand &amp; company sites</li>
+        <li>E-commerce storefronts</li>
+        <li>Web apps &amp; customer portals</li>
+        <li>Speed, SEO &amp; accessibility</li>
+      </ul>
+    </article>
+    <article class="svc">
+      <div class="tag"><span class="label">Back office</span></div>
+      <h3>ERP systems</h3>
+      <p>Custom business systems shaped around how your team already works. One place for stock, orders, money and people.</p>
+      <ul>
+        <li>Inventory &amp; purchasing</li>
+        <li>Billing &amp; invoicing</li>
+        <li>HR, payroll &amp; attendance</li>
+        <li>CRM &amp; live dashboards</li>
+      </ul>
+    </article>
+    <article class="svc">
+      <div class="tag"><span class="label">Growth</span></div>
+      <h3>Marketing</h3>
+      <p>A marketing team that plans the story, makes the work and measures what it earns, so every post and every budget has a reason.</p>
+      <ul>
+        <li>Brand strategy &amp; identity</li>
+        <li>Social media &amp; content</li>
+        <li>Performance ads</li>
+        <li>Campaigns &amp; email</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="band" id="how">
+  <div class="block wrap">
+    <div class="sec-head">
+      <p class="label">How it connects</p>
+      <h2>From the first ad to the final invoice, <span class="serif">one line.</span></h2>
+    </div>
+    <div class="flow">
+      <div><span class="who">Marketing</span><b>Campaign</b><small>An ad or post reaches the right person.</small></div>
+      <div><span class="who">Website</span><b>Visit</b><small>They land on a page built to answer them.</small></div>
+      <div><span class="who">Website</span><b>Enquiry</b><small>A form or a cart captures who they are.</small></div>
+      <div><span class="who">ERP</span><b>CRM</b><small>The lead appears for your sales team.</small></div>
+      <div><span class="who">ERP</span><b>Order &amp; invoice</b><small>Stock moves and the bill goes out.</small></div>
+      <div><span class="who">Marketing</span><b>Report</b><small>We see which campaign earned the sale.</small></div>
+    </div>
+    <div class="band-foot">
+      <p>When one studio builds all three, nothing gets lost between them.</p>
+      <a class="pill outline" style="color:var(--white);border-color:var(--white)" href="#contact">Talk to us <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="block wrap" id="process">
+  <div class="sec-head">
+    <p class="label">Process</p>
+    <h2>How a project <span class="serif">runs.</span></h2>
+  </div>
+  <div class="steps">
+    <div class="step"><span class="n">01</span><h3>Listen</h3><p>We learn your business, your customers and your numbers before we draw anything.</p></div>
+    <div class="step"><span class="n">02</span><h3>Plan</h3><p>Sitemaps, system flows and a campaign outline, with a fixed scope and timeline.</p></div>
+    <div class="step"><span class="n">03</span><h3>Build</h3><p>Design, code and content, shown to you every week so there are no surprises.</p></div>
+    <div class="step"><span class="n">04</span><h3>Grow</h3><p>Launch, measure and improve. We stay on to support, maintain and market.</p></div>
+  </div>
+</section>
+
+<section class="block wrap" style="padding-top:0">
+  <div class="principles">
+    <p class="label">How we work</p>
+    <ul>
+      <li><b>Fewer, better things</b><span>We take on a small number of clients so each one gets senior attention.</span></li>
+      <li><b>Built around you</b><span>Systems follow your workflow. You shouldn't have to change how you work to fit the software.</span></li>
+      <li><b>Measured honestly</b><span>Every campaign reports on leads and revenue, not just likes and reach.</span></li>
+      <li><b>Yours to keep</b><span>You own the code, the data and the accounts. No lock-in.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="contact wrap" id="contact">
+  <p class="label" style="margin-bottom:28px">Contact</p>
+  <h2>Let’s build <span class="serif">something.</span></h2>
+  <div class="contact-row">
+    <span class="email" id="email">hello@kernandcode.com</span>
+    <div class="group">
+      <button class="pill" id="copy" type="button">Copy email</button>
+      <a class="pill outline" href="mailto:hello@kernandcode.com">Write to us <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Kern &amp; Code</span>
+    <span>Websites · ERP systems · Marketing</span>
+  </div>
+</footer>
 
 <script>
-(() => {
-  const book = document.getElementById('book');
-  const leaves = [...book.querySelectorAll('.leaf')];
-  const underL = book.querySelector('.under.l');
-  const snaps = [...document.querySelectorAll('.snap')];
-  const count = document.querySelector('.folio-count');
-  const hint = document.querySelector('.hint');
-  const N = leaves.length;
-  const wide = matchMedia('(min-width: 820px)');
-  const still = matchMedia('(prefers-reduced-motion: reduce)');
-  const roman = ['i','ii','iii','iv','v','vi','vii'];
-  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-  const ease = t => still.matches ? (t < .5 ? 0 : 1) : t * t * (3 - 2 * t);
-
-  let ticking = false;
-  function render() {
-    ticking = false;
-    const step = snaps[0].offsetHeight || innerHeight;
-    const p = clamp(scrollY / step, 0, N - 1);
-    const pw = leaves[0].offsetWidth;
-
-    leaves.forEach((leaf, i) => {
-      const t = i === N - 1 ? 0 : ease(clamp(p - i, 0, 1));
-      leaf.style.transform = `rotateY(${-180 * t}deg)`;
-      leaf.style.zIndex = t > .5 ? 100 + i : 50 - i;
-      leaf.style.setProperty('--shade', (Math.sin(Math.PI * t) * .9).toFixed(3));
-    });
-
-    const first = ease(clamp(p, 0, 1));
-    book.style.setProperty('--shift', wide.matches ? `${-(1 - first) * pw / 2}px` : '0px');
-    underL.style.opacity = first;
-    count.textContent = 'p. ' + roman[Math.round(p)];
-    hint.style.opacity = p > .3 ? 0 : 1;
-  }
-  const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(render); } };
-  addEventListener('scroll', request, { passive: true });
-  addEventListener('resize', request);
-  wide.addEventListener?.('change', request);
-
-  function go(i) {
-    i = clamp(i, 0, N - 1);
-    scrollTo({ top: snaps[i].offsetTop, behavior: still.matches ? 'auto' : 'smooth' });
-  }
-  const current = () => Math.round(scrollY / (snaps[0].offsetHeight || innerHeight));
-
-  document.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', e => {
-    e.preventDefault(); go(+a.dataset.go);
-  }));
-
-  // Click the right page to turn forward, the left page to turn back.
-  book.addEventListener('click', e => {
-    if (e.target.closest('a, button')) return;
-    const r = book.getBoundingClientRect();
-    const mid = wide.matches ? r.left + r.width / 2 : r.left + r.width * .35;
-    go(current() + (e.clientX >= mid ? 1 : -1));
-  });
-
-  addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') { e.preventDefault(); go(current() + 1); }
-    if (e.key === 'ArrowLeft')  { e.preventDefault(); go(current() - 1); }
-  });
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', scrollY > 8);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
   const copy = document.getElementById('copy');
   copy.addEventListener('click', () => {
-    const text = document.getElementById('addr').textContent;
-    const done = () => { copy.textContent = 'Copied'; setTimeout(() => copy.textContent = 'Copy address', 1800); };
-    const fallback = () => {
-      const sel = getSelection(); const range = document.createRange();
-      range.selectNodeContents(document.getElementById('addr')); sel.removeAllRanges(); sel.addRange(range);
-      copy.textContent = 'Selected';
-    };
-    try { navigator.clipboard.writeText(text).then(done, fallback); } catch { fallback(); }
+    const el = document.getElementById('email');
+    const done = () => { copy.textContent = 'Copied'; setTimeout(() => copy.textContent = 'Copy email', 1800); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); copy.textContent = 'Selected'; };
+    try { navigator.clipboard.writeText(el.textContent).then(done, fallback); } catch (e) { fallback(); }
   });
-
-  if (location.hash && /^#p[1-7]$/.test(location.hash)) go(+location.hash.slice(2) - 1);
-  render();
-})();
 </script>
 </body>
 </html>
